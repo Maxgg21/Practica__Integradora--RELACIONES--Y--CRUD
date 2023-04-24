@@ -1,4 +1,4 @@
-const { Movie, Sequelize , Genre} = require('../database/models');
+const { Movie, Sequelize , Genre, Actor} = require('../database/models');
 const {validationResult} = require('express-validator')
 
 const moviesController = {
@@ -170,19 +170,27 @@ const moviesController = {
         })
         .catch(error => console.log(error))
     },
-    destroy: function (req, res) {
+    destroy: async function (req, res) {
         // TODO
         const {id : MOVIE_ID} = req.params;
-
-        Movie.destroy({
-            where: {
-                id : MOVIE_ID
-            }, 
-            include: [{association: 'actores'}]
-        }).then(()=> {
-            return res.redirect('/movies')
+       
+        const ACTOR_DELETE = await Actor.update( {favorite_movie_id : null }, {
+            where : {
+                favorite_movie_id : MOVIE_ID
+            }
         })
-        .catch(error => console.log(error))
+        if (!ACTOR_DELETE) {
+            throw new Error('ERORRRRRRRRRRRRRRRR AQUI')
+        }else {
+            Movie.destroy({
+                where: {
+                    id : MOVIE_ID
+                }, 
+            }).then(()=> {
+                return res.redirect('/movies')
+            })
+            .catch(error => console.log(error))
+        }        
     }
 };
 

@@ -4,5 +4,6 @@ const actorsController = require('../controllers/actorsController');
 
 
 router.get('/actors', actorsController.list);
+router.get('/actors/detail/:id', actorsController.relatedMovie);
 
 module.exports = router;

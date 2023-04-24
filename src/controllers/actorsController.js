@@ -8,6 +8,14 @@ const actorsController = {
 //            return res.send(resolve)
             return res.render('actorMovies', {actors : resolve})
         })
+    },
+    relatedMovie : async (req, res) => {
+        
+       Actor.findByPk(req.params.id)
+        .then(actor => {
+            return res.render('actorDetail', {actor})
+        }).catch(error => console.log(error))
+      
     }
 };
 
